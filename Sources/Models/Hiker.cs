@@ -50,7 +50,7 @@ namespace HikerTrader.Sources.Models
                 if (quantity > 0)
                     Console.WriteLine($"            {ToRomanNumeral(i++)}.  {item.Name}: {quantity}");
             }
-            Console.WriteLine($"     f.  Injured: " + (IsInjured ? "Yes" : "No"));
+            Console.WriteLine($"    f.  Injured: " + (IsInjured ? "Yes" : "No"));
             Console.WriteLine("");
         }
 
