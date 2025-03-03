@@ -1,3 +1,4 @@
+using System.Globalization;
 using HikerTrader.Sources.Data;
 using HikerTrader.Sources.Models;
 
@@ -62,19 +63,19 @@ namespace HikerTrader.Sources.Services
         {
             Console.WriteLine($"Adding hiker {Hiker.GetNextID()}:");
             string name = GetInputString("Provide hiker's name");
-            int age = int.Parse(GetInputString("Provide hiker's age"));
+            int age = GetInputInt("Provide hiker's age");
             string gender = GetInputString("Provide hiker's gender (M/F/O)");
-            double latitude = double.Parse(GetInputString("Provide hiker's last known latitude"));
-            double longitude = double.Parse(GetInputString("Provide hiker's last known longitude"));
+            double latitude = GetInputDouble("Provide hiker's last known latitude");
+            double longitude = GetInputDouble("Provide hiker's last known longitude");
             Hiker hiker = new Hiker(name, age, gender, latitude, longitude);
             foreach (Item item in GetAllItems())
             {
-                hiker.AddItemToInventory(item, int.Parse(GetInputString($"Provide counts of {item.Name} in hiker's inventory")));
+                hiker.AddItemToInventory(item, GetInputInt($"Provide counts of {item.Name} in hiker's inventory"));
             }
-            string injured = GetInputString("Is the hiker injured? (yes/no)").Trim().ToLower();
+            string injured = GetInputString("Is the hiker injured? (yes/no)").ToLower();
             hiker.IsInjured = (injured == "yes" || injured == "y") ? true : false;
             AddHiker(hiker);
-            Console.WriteLine("");
+            Console.WriteLine($"Hiker {hiker.HikerId} added successfully!\n");
         }
         
         public void ListHikers()
@@ -106,7 +107,8 @@ namespace HikerTrader.Sources.Services
                 Console.WriteLine("Trade between Hiker 1 & Hiker 2: Not possible, Hiker 1 has more inventory points to exchange");
             else
             {
-                var tempInventory = hiker1.Inventory;
+                var tempInventory = new Inventory(0);
+                tempInventory.ReplaceInventory(hiker1.Inventory);
                 hiker1.Inventory.ReplaceInventory(hiker2.Inventory);
                 hiker2.Inventory.ReplaceInventory(tempInventory);
 
@@ -133,10 +135,61 @@ namespace HikerTrader.Sources.Services
             }
         }
 
+        private static double GetInputDouble(string promptMessage)
+        {
+            bool success = false;
+            double result = 0;
+            while (!success)
+            {
+                string line = GetInputString(promptMessage);
+                try
+                {
+                    result = double.Parse(line, NumberFormatInfo.InvariantInfo);
+                    success = true;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Please provide a floating point value!");
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("Please provide a value in range: double!");
+                }
+            }
+            return result;
+        }
+
+        private static int GetInputInt(string promptMessage)
+        {
+            bool success = false;
+            int result = 0;
+            while (!success)
+            {
+                string line = GetInputString(promptMessage);
+                try
+                {
+                    result = int.Parse(line);
+                    if (result >= 0) 
+                        success = true;
+                    else
+                        Console.WriteLine("Please provide a positive integer value!");
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Please provide a positive integer value!");
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("Please provide a value in range: positive integer!");
+                }
+            }
+            return result;
+        }
+
         private static string GetInputString(string promptMessage)
         {
             string? line = null;
-            while (line == null || line == "")
+            while (string.IsNullOrEmpty(line))
             {
                 Console.Write(promptMessage + ": ");
                 line = Console.ReadLine();
