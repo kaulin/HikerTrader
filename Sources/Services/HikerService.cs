@@ -129,7 +129,7 @@ namespace HikerTrader.Sources.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Caught exception:\n{e}");
+                Console.WriteLine($"Error, caught exception:\n{e}\nTerminating application!");
             }
         }
 
