@@ -74,6 +74,7 @@ namespace HikerTrader.Sources.Services
             string injured = GetInputString("Is the hiker injured? (yes/no)").Trim().ToLower();
             hiker.IsInjured = (injured == "yes" || injured == "y") ? true : false;
             AddHiker(hiker);
+            Console.WriteLine("");
         }
         
         public void ListHikers()
