@@ -136,10 +136,10 @@ namespace HikerTrader.Sources.Services
         private static string GetInputString(string promptMessage)
         {
             string? line = null;
-            while (line == null)
+            while (line == null || line == "")
             {
                 Console.Write(promptMessage + ": ");
-                line = Console.ReadLine();
+                line = Console.ReadLine().Trim();
             }
             return line;
         }
