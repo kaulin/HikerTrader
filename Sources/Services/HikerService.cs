@@ -139,7 +139,9 @@ namespace HikerTrader.Sources.Services
             while (line == null || line == "")
             {
                 Console.Write(promptMessage + ": ");
-                line = Console.ReadLine().Trim();
+                line = Console.ReadLine();
+                if (line != null)
+                    line = line.Trim();
             }
             return line;
         }
